@@ -1,0 +1,61 @@
+plugins {
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
+    id 'io.micronaut.application' version '3.6.5'
+}
+
+group = 'demo.fst'
+version = '1.0.0'
+
+application {
+    mainClass = 'demo.fst.Application'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+        vendor = JvmVendorSpec.GRAAL_VM
+    }
+}
+
+graalvmNative {
+    toolchainDetection = true
+}
+
+micronaut {
+    version '3.7.4'
+    runtime 'netty'
+    testRuntime 'junit5'
+    processing {
+        incremental true
+        annotations 'demo.fst.*'
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    annotationProcessor 'io.micronaut.data:micronaut-data-processor'
+    annotationProcessor 'io.micronaut:micronaut-http-validation'
+
+    /* Web + JPA */
+    implementation 'jakarta.annotation:jakarta.annotation-api'
+    implementation 'io.micronaut:micronaut-jackson-databind'
+    implementation 'io.micronaut:micronaut-validation'
+
+    /* Database */
+    runtimeOnly 'com.h2database:h2'
+    implementation 'io.micronaut.data:micronaut-data-hibernate-jpa'
+    implementation 'io.micronaut.flyway:micronaut-flyway'
+    implementation 'io.micronaut.sql:micronaut-jdbc-hikari'
+
+    /* Logging */
+    runtimeOnly 'ch.qos.logback:logback-classic:1.4.5'
+    runtimeOnly 'org.fusesource.jansi:jansi:1.18'
+
+    /* Testing */
+    testImplementation 'org.assertj:assertj-core'
+    testImplementation 'io.micronaut:micronaut-http-client'
+    testImplementation 'io.micronaut.test:micronaut-test-rest-assured'
+}
